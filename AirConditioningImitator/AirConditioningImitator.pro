@@ -8,6 +8,7 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
+        src/imitatorsettings.cpp \
         src/mainwindow.cpp \
         src/mainwindowcontroller.cpp \
         src/tcpserver.cpp
@@ -21,6 +22,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    src/imitatorsettings.h \
     src/mainwindow.h \
     src/mainwindowcontroller.h \
     src/tcpserver.h
