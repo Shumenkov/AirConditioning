@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/temp_dial_bg.png</file>
+        <file>image/full_open.png</file>
+        <file>image/half_open.png</file>
+    </qresource>
+</RCC>

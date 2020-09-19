@@ -48,5 +48,22 @@ void ImitatorSettings::setIpAddress(const QString &ipAddress)
     settings->setValue(IP_ADDRESS, m_ipAddress);
 }
 
+quint32 ImitatorSettings::port()
+{
+    m_port = settings->value(PORT).toUInt();
+    if(m_port == 0)
+    {
+        m_port = DEFAULT_PORT;
+        settings->setValue(PORT, m_port);
+    }
+    return m_port;
+}
+
+void ImitatorSettings::setPort(const quint32 &port)
+{
+    m_port = port;
+    settings->setValue(PORT, m_port);
+}
+
 }
 }

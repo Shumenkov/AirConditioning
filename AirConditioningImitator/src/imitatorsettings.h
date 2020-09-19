@@ -13,6 +13,8 @@ namespace Imitator {
 #define IP_ADDRESS "IP_ADDRESS"
 #define DEFAULT_IP_ADDRESS "127.0.0.1"
 
+#define PORT "PORT"
+#define DEFAULT_PORT 50000
 
 class ImitatorSettings;
 
@@ -41,10 +43,14 @@ public:
     QString ipAddress();
     void setIpAddress(const QString &ipAddress);
 
+    quint32 port();
+    void setPort(const quint32 &port);
+
 private:
     QSettings* settings;
 
     QString m_ipAddress;
+    quint32 m_port;
 
 };
 
