@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>src/MainWindow.qml</file>
         <file>src/MainWindowForm.ui.qml</file>
+        <file>src/Digital.ttf</file>
     </qresource>
 </RCC>

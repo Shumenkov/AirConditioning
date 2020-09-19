@@ -13,6 +13,7 @@ MainWindow::MainWindow(QObject *parent) : QObject(parent),
     context->setContextProperty("MainWindowController", m_mainWindowController);
     const QUrl url(QStringLiteral("qrc:/src/MainWindow.qml"));
     m_qmlEngine.load(url);
+    m_mainWindowController->setState();
 }
 
 }

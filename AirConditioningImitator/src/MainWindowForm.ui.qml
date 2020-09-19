@@ -15,7 +15,20 @@ Item {
         onSendBodyImage: {
             bodyImage.source = bodyImageSourse
         }
+        onSendOnIndicator: {
+            onIndicator.source = indicatorSourse
+        }
+
+        onSendTemperature: {
+            temperatureLabel.text = temperature
+        }
     }
+
+    FontLoader {
+        id: digitalFont
+        source: "qrc:/src/Digital.ttf"
+    }
+
     Image {
         id: bodyImage
         x: 0
@@ -40,10 +53,25 @@ Item {
         }
 
         Label {
-            id: label
-            x: 644
-            y: 71
-            text: ""
+            id: temperatureLabel
+            text: "4554"
+            anchors.fill: parent
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
+            anchors.bottomMargin: 166
+            anchors.rightMargin: 30
+            anchors.topMargin: 72
+            anchors.leftMargin: 630
+            font.pointSize: 20
+            font.family: digitalFont.name
+            color: "white"
         }
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:3}D{i:5}
+}
+##^##*/
+

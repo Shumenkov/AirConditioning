@@ -2,6 +2,7 @@
 #define MAINWINDOWCONTROLLER_H
 
 #include <QObject>
+#include "tcpmessages.h"
 
 
 namespace Conditioning {
@@ -28,6 +29,7 @@ public slots:
 private:
     bool m_isPowerOn;
     QString m_powerButColorStr;
+    TcpMessages* m_tcpMessages;
 
 };
 

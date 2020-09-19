@@ -65,5 +65,75 @@ void ImitatorSettings::setPort(const quint32 &port)
     settings->setValue(PORT, m_port);
 }
 
+bool ImitatorSettings::getPowerStatus()
+{
+    m_powerStatus = settings->value(POWER_STATUS).toBool();
+    return m_powerStatus;
+}
+
+void ImitatorSettings::setPowerStatus(bool powerStatus)
+{
+    m_powerStatus = powerStatus;
+    settings->setValue(POWER_STATUS, m_powerStatus);
+}
+
+quint8 ImitatorSettings::getTemperature()
+{
+    m_temperature = settings->value(TEMPERATURE).toUInt();
+    if(m_temperature == 0)
+    {
+        m_temperature = DEFAULT_TEMPERATURE;
+        settings->setValue(TEMPERATURE, m_temperature);
+    }
+    return m_temperature;
+}
+
+void ImitatorSettings::setTemperature(const quint8 &temperature)
+{
+    m_temperature = temperature;
+    settings->setValue(TEMPERATURE, m_temperature);
+}
+
+AirFlowType ImitatorSettings::getAirFlowType()
+{
+    QString airFlowType = settings->value(AIR_FLOW_TYPE).toString();
+    if(airFlowType.isEmpty())
+    {
+        airFlowType = DEFAULT_AIR_FLOW_TYPE;
+        settings->setValue(AIR_FLOW_TYPE, airFlowType);
+    }
+
+    if(airFlowType == "close")
+        m_airFlowType = AirFlowType::CLOSE;
+    else if(airFlowType == "half_open")
+        m_airFlowType = AirFlowType::HALF_OPEN;
+    else if(airFlowType == "open")
+        m_airFlowType = AirFlowType::OPEN;
+    else
+        m_airFlowType = AirFlowType::CLOSE;
+
+    return m_airFlowType;
+}
+
+void ImitatorSettings::setAirFlowType(const AirFlowType &airFlowType)
+{
+    m_airFlowType = airFlowType;
+    QString airFlowTypeStr;
+    switch (m_airFlowType) {
+    case AirFlowType::CLOSE:
+        airFlowTypeStr = "close";
+        break;
+
+    case AirFlowType::HALF_OPEN:
+        airFlowTypeStr = "half_open";
+        break;
+
+    case AirFlowType::OPEN:
+        airFlowTypeStr = "open";
+        break;
+    }
+     settings->setValue(AIR_FLOW_TYPE, airFlowTypeStr);
+}
+
 }
 }

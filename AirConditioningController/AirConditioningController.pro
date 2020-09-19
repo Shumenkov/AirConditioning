@@ -8,11 +8,8 @@ include($$PWD/src/src.pri)
 RESOURCES += qml.qrc \
     img.qrc
 
-# Additional import path used to resolve QML modules in Qt Creator's code model
-#QML_IMPORT_PATH =
-
-# Additional import path used to resolve QML modules just for Qt Quick Designer
-#QML_DESIGNER_IMPORT_PATH =
+INCLUDEPATH += ../AirConditioningNetInteraction/src
+LIBS += -L../build-AirConditioningNetInteraction-Desktop_Qt_5_11_0_MinGW_32bit-Debug/debug -lAirConditioningNetInteraction
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

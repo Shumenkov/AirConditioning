@@ -5,8 +5,10 @@
 #include <QQmlApplicationEngine>
 #include "mainwindowcontroller.h"
 
+
 namespace Conditioning {
 namespace Controller {
+
 class MainWindow : public QObject
 {
     Q_OBJECT
