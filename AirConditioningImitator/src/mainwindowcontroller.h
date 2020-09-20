@@ -15,6 +15,8 @@ class MainWindowController : public QObject
     Q_OBJECT
 public:
     explicit MainWindowController(QObject *parent = nullptr);
+    virtual ~MainWindowController();
+
     void setState();
 
     QString bodyImage();
@@ -30,6 +32,8 @@ public slots:
     void setPowerOn();
     void setPowerOff();
     void setTemperatureSlot(quint8 temperature);
+    void setAirFlowType(AirFlowType type);
+    void connectToClient();
 
 signals:
     void sendBodyImage(QString bodyImageSourse);
@@ -43,6 +47,11 @@ private:
 
     TcpMessages* m_tcpMessages;
     ImitatorSettings* settings;
+
+    bool m_isPowerOn;
+
+    QString getBodyImage(AirFlowType type);
+    ConditionStatus getStatus();
 
 
 

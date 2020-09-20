@@ -13,7 +13,16 @@ MainWindowController::MainWindowController(QObject *parent) : QObject(parent),
 {
     connect(m_tcpMessages, &TcpMessages::setPowerOn, this, &MainWindowController::setPowerOn);
     connect(m_tcpMessages, &TcpMessages::setPowerOff, this, &MainWindowController::setPowerOff);
-     connect(m_tcpMessages, &TcpMessages::setTemp, this, &MainWindowController::setTemperatureSlot);
+    connect(m_tcpMessages, &TcpMessages::setTemp, this, &MainWindowController::setTemperatureSlot);
+    connect(m_tcpMessages, &TcpMessages::setAirFlowType, this, &MainWindowController::setAirFlowType);
+    connect(m_tcpMessages, &TcpMessages::connected, this, &MainWindowController::connectToClient);
+
+    m_isPowerOn = settings->getPowerStatus();
+}
+
+MainWindowController::~MainWindowController()
+{
+    delete m_tcpMessages;
 }
 
 QString MainWindowController::bodyImage()
@@ -51,31 +60,81 @@ void MainWindowController::setOnIndicator(QString onIndicator)
 
 void MainWindowController::setPowerOn()
 {
+    m_isPowerOn = true;
     setOnIndicator("qrc:/Images/ON.png");
+    setBodyImage(getBodyImage(settings->getAirFlowType()));
+    setTemperature(QString::number(settings->getTemperature()));
     settings->setPowerStatus(true);
+    m_tcpMessages->sendStatus(getStatus());
 }
 
 void MainWindowController::setPowerOff()
 {
+    m_isPowerOn = false;
     setOnIndicator("qrc:/Images/OFF.png");
     setBodyImage("qrc:/Images/close.png");
+    setTemperature("");
     settings->setPowerStatus(false);
 }
 
 void MainWindowController::setTemperatureSlot(quint8 temperature)
 {
-     setTemperature(QString::number(temperature));
-     settings->setTemperature(temperature);
+    if(!m_isPowerOn)
+        return;
+    setTemperature(QString::number(temperature));
+    settings->setTemperature(temperature);
+}
+
+void MainWindowController::setAirFlowType(AirFlowType type)
+{
+    if(!m_isPowerOn)
+        return;
+    settings->setAirFlowType(type);
+    setBodyImage(getBodyImage(type));
+}
+
+void MainWindowController::connectToClient()
+{
+    m_tcpMessages->sendStatus(getStatus());
+}
+
+QString MainWindowController::getBodyImage(AirFlowType type)
+{
+    switch (type) {
+    case AirFlowType::OPEN:
+        return "qrc:/Images/FullOpen.png";
+        break;
+    case AirFlowType::HALF_OPEN:
+        return "qrc:/Images/HalfOpen.png";
+        break;
+    case AirFlowType::CLOSE:
+        return "qrc:/Images/close.png";
+        break;
+    default:
+        return "qrc:/Images/close.png";
+        break;
+    }
+}
+
+ConditionStatus MainWindowController::getStatus()
+{
+    ConditionStatus conditionStatus(
+                settings->getPowerStatus(),
+                settings->getTemperature(),
+                settings->getAirFlowType());
+    return conditionStatus;
 }
 
 void MainWindowController::setState()
 {
     if(settings->getPowerStatus())
-        setOnIndicator("qrc:/Images/ON.png");
+    {
+        setPowerOn();
+        m_tcpMessages->sendStatus(getStatus());
+    }
     else
-        setOnIndicator("qrc:/Images/OFF.png");
+        setPowerOff();
 
-    setTemperature(QString::number(settings->getTemperature()));
 
 }
 

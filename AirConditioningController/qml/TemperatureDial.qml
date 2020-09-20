@@ -21,6 +21,18 @@ Item {
             return (value * 9/5) + 32
     }
 
+    Connections {
+        target: MainWindowController
+
+        onSendTemperature: {
+            dialTemperature.value = temperature
+        }
+
+        onSetEnableControls:{
+            dialTemperature.enabled= enabled
+        }
+    }
+
     Image {
         id: imageTemperatureBG
         anchors.left: temperatureDial.left
@@ -43,6 +55,7 @@ Item {
             y: imageTemperatureBG.height / 2 - height / 2
             width: imageTemperatureBG.width/1.3
             height: imageTemperatureBG.height/1.3
+            enabled: false
             baselineOffset: 0
             wheelEnabled: false
             clip: false
@@ -86,7 +99,7 @@ Item {
             }
 
             Text {
-                id: element
+                id: temperatureText
                 text: Math.round(getTempMultiplication(dialTemperature.value)) +  getTempVisible()
                 x: dialTemperature.width / 2 - width / 2
                 y: dialTemperature.height / 2 - height / 2
@@ -162,10 +175,10 @@ Item {
                 height: 8
                 contextType: "2d"
 
-//                Connections {
-//                    target: comboBoxTemperatureValue
-//                    function onPressedChanged() { canvas.requestPaint(); }
-//                }
+                //                Connections {
+                //                    target: comboBoxTemperatureValue
+                //                    function onPressedChanged() { canvas.requestPaint(); }
+                //                }
 
                 onPaint: {
                     context.reset();
@@ -179,8 +192,8 @@ Item {
             }
 
             contentItem: Text {
-//                leftPadding: 0
-//                rightPadding: control.indicator.width + control.spacing
+                //                leftPadding: 0
+                //                rightPadding: control.indicator.width + control.spacing
 
                 text: comboBoxTemperatureValue.displayText
                 font: comboBoxTemperatureValue.font

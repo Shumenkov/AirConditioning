@@ -1,4 +1,5 @@
 #include "tcpmessages.h"
+#include "controllersettings.h"
 
 namespace Conditioning {
 namespace Controller {
@@ -7,7 +8,17 @@ namespace Controller {
 TcpMessages::TcpMessages(QObject *parent) : QObject(parent),
     m_tcpClient(new TcpClient(this))
 {
-    m_tcpClient->connectToHost(QHostAddress("127.0.0.1"), 50000);
+    ControllerSettings* settings = ControllerSettings::getInstance();
+
+    m_tcpClient->connectToHost(QHostAddress(settings->ipAddress()), settings->port());
+    connect(m_tcpClient, &TcpClient::resiveData, this, &TcpMessages::reseiveData);
+    connect(m_tcpClient, &TcpClient::connectedToHost, this, &TcpMessages::connectedToServer);
+    connect(m_tcpClient, &TcpClient::disconnectedToHost, this, &TcpMessages::disconnectedToServer);
+}
+
+TcpMessages::~TcpMessages()
+{
+    delete m_tcpClient;
 }
 
 void TcpMessages::setPowerOn()
@@ -104,7 +115,7 @@ void TcpMessages::reseiveData(const QByteArray &data)
         parseControlMessagePackets(inputStream);
         break;
     case INFO_MESSAGE:
-        parseControlMessagePackets(inputStream);
+        parseInfoMessagePackets(inputStream);
         break;
     }
 }

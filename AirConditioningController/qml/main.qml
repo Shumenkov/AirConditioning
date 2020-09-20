@@ -7,12 +7,17 @@ Window {
     width: 720 * .7
     height: 1240 * .7
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("Condition control")
 
 
 
     Connections {
             target: MainWindowController
+
+            onSetEnableControls:{
+                rectangleFullOpen.enabled= enabled
+                rectangleHalfOpen.enabled= enabled
+            }
     }
 
     Column{
@@ -124,55 +129,63 @@ Window {
             spacing: 100
 
 
-            Rectangle{
+            Button{
                 id: rectangleFullOpen
-                color: "#92D8FF"
-                radius: 12
                 width: 100
                 height: 100
+                enabled: false
 
-                Image {
-                    id: imageFullOpen
-                    x: parent.width / 2 - parent.width/2.1
-                    y: parent.height / 2 - parent.height/2.1
-                    height: parent.height/1.04
-                    width: parent.width/1.06
-                    source: "../image/full_open.png"
-                    fillMode: Image.PreserveAspectFit
-
-
-
+                onClicked: {
+                    MainWindowController.pushButtonOpenClicked();
                 }
+
+                background: Rectangle{
+                    border.color: "#449AD5"
+                    border.width: 2
+                    radius: 12
+                    color: MainWindowController.openButColor
+
+                    Image {
+                        id: imageFullOpen
+                        x: parent.width / 2 - parent.width/2.1
+                        y: parent.height / 2 - parent.height/2.1
+                        height: parent.height/1.04
+                        width: parent.width/1.06
+                        source: "../image/full_open.png"
+                        fillMode: Image.PreserveAspectFit
+                    }
+                }
+
+
             }
 
-            Rectangle{
+            Button{
                 id: rectangleHalfOpen
-                color: "#92D8FF"
-                radius: 12
                 width: 100
                 height: 100
+                enabled: false
 
-                Image {
-                    id: imageHalfOpen
-                    x: parent.width / 2 - parent.width/2.1
-                    y: parent.height / 2 - parent.height/2.1
-                    height: parent.height/1.04
-                    width: parent.width/1.06
-                    source: "../image/half_open.png"
-                    fillMode: Image.PreserveAspectFit
+                onClicked: {
+                    MainWindowController.pushButtonOpenHalfClicked();
+                }
 
+                background: Rectangle{
+                    border.color: "#449AD5"
+                    border.width: 2
+                    radius: 12
+                    color: MainWindowController.halfOpenButColor
 
-
+                    Image {
+                        id: imageHalfOpen
+                        x: parent.width / 2 - parent.width/2.1
+                        y: parent.height / 2 - parent.height/2.1
+                        height: parent.height/1.04
+                        width: parent.width/1.06
+                        source: "../image/half_open.png"
+                        fillMode: Image.PreserveAspectFit
+                    }
                 }
             }
-
-
-            //            Image {
-            //                id: imageHalfOpen
-            //                source: "image/half_open.png"
-            //                fillMode: Image.PreserveAspectFit
-
-            //            }
         }
 
 

@@ -19,10 +19,11 @@ public:
     void listen();
 
 public slots:
-    void sendData(const QByteArray &data, quint32 linkCount = -1);
+    void sendData(const QByteArray &data, qint32 linkCount = -1);
 
 signals:
     void dataPrepared(quint32 linkCount, const QByteArray &data);
+    void connected();
 
 private:
     QTcpServer* m_server;
@@ -30,6 +31,7 @@ private:
 
 private slots:
     void slotNewConnection();
+    void linkDisconnected(qint32 linkCount);
 
 };
 

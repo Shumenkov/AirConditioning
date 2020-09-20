@@ -16,5 +16,10 @@ MainWindow::MainWindow(QObject *parent) : QObject(parent),
     m_mainWindowController->setState();
 }
 
+MainWindow::~MainWindow()
+{
+    delete m_mainWindowController;
+}
+
 }
 }

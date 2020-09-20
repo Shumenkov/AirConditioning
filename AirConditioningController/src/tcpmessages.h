@@ -16,8 +16,11 @@ class TcpMessages : public QObject
     Q_OBJECT
 public:
     explicit TcpMessages(QObject *parent = nullptr);
+    virtual ~TcpMessages();
 
 signals:
+    void connectedToServer();
+    void disconnectedToServer();
     void setStatus(const ConditionStatus &status);
 
 public slots:

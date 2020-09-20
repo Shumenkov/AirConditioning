@@ -8,6 +8,24 @@ TcpMessages::TcpMessages(QObject *parent) : QObject(parent),
     m_tcpServer(new TcpServer("",0,this))
 {
     connect(m_tcpServer, &TcpServer::dataPrepared, this, &TcpMessages::reseiveData);
+    connect(m_tcpServer, &TcpServer::connected, this, &TcpMessages::connected);
+}
+
+TcpMessages::~TcpMessages()
+{
+    delete m_tcpServer;
+}
+
+void TcpMessages::sendStatus(const ConditionStatus &status)
+{
+    QByteArray packetBA;
+    QDataStream packetStream(&packetBA, QIODevice::WriteOnly);
+    quint8 messageType = INFO_MESSAGE;
+    quint8 controlMessage = SEND_STATUS;
+    packetStream<<messageType;
+    packetStream<<controlMessage;
+    packetStream<<status;
+    m_tcpServer->sendData(packetBA);
 }
 
 void TcpMessages::parseControlMessagePackets(QDataStream &inputStream)
@@ -25,6 +43,9 @@ void TcpMessages::parseControlMessagePackets(QDataStream &inputStream)
     case SET_TEMPERATURE:
         parseTemperature(inputStream);
         break;
+    case SET_AIR_FLOW:
+        parseAirFlowType(inputStream);
+        break;
     }
 }
 
@@ -38,6 +59,13 @@ void TcpMessages::parseTemperature(QDataStream &inputStream)
     quint8 temp;
     inputStream >> temp;
     emit setTemp(temp);
+}
+
+void TcpMessages::parseAirFlowType(QDataStream &inputStream)
+{
+    quint8 type;
+    inputStream >> type;
+    emit setAirFlowType(AirFlowType(type));
 }
 
 void TcpMessages::reseiveData(quint8 linkCount, const QByteArray &data)

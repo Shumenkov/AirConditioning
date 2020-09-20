@@ -10,6 +10,7 @@ TcpServer::TcpServer(QString host, quint16 port, QObject *parent)
     ,m_server(new QTcpServer(this))
 {
     connect(m_server, &QTcpServer::newConnection, this, &TcpServer::slotNewConnection);
+    connect(m_server, &QTcpServer::newConnection, this, &TcpServer::connected);
     if(host.isEmpty() && port == 0)
     {
         ImitatorSettings* settings = ImitatorSettings::getInstance();
@@ -32,10 +33,10 @@ TcpServer::TcpServer(QString host, quint16 port, QObject *parent)
 
 TcpServer::~TcpServer()
 {
-    delete  m_server;
     for(TcpServerLink* link : m_links)
         delete link;
     m_links.clear();
+    delete  m_server;
 }
 
 void TcpServer::close()
@@ -58,7 +59,7 @@ void TcpServer::listen()
         link->open();
 }
 
-void TcpServer::sendData(const QByteArray &data, quint32 linkCount)
+void TcpServer::sendData(const QByteArray &data, qint32 linkCount)
 {
     if(linkCount < 0)
     {
@@ -73,7 +74,7 @@ void TcpServer::sendData(const QByteArray &data, quint32 linkCount)
     }
     else
     {
-        if(quint32(m_links.size()) > linkCount)
+        if(qint32(m_links.size()) > linkCount)
             m_links[linkCount]->sendData(data);
     }
 }
@@ -84,8 +85,18 @@ void TcpServer::slotNewConnection()
     {
         TcpServerLink* link = new TcpServerLink(m_server->nextPendingConnection(), m_links.size(), this);
         connect(link, &TcpServerLink::dataReceive, this, &TcpServer::dataPrepared);
+        connect(link, &TcpServerLink::disconnected, this, &TcpServer::linkDisconnected);
         m_links.append(link);
     }
+}
+
+void TcpServer::linkDisconnected(qint32 linkCount)
+{
+   if(m_links.size()>linkCount)
+   {
+       delete m_links[linkCount];
+       m_links.remove(linkCount);
+   }
 }
 
 

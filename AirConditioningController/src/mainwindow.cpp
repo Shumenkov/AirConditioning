@@ -16,5 +16,10 @@ MainWindow::MainWindow(QObject *parent) : QObject(parent),
     m_qmlEngine.load(url);
 }
 
+MainWindow::~MainWindow()
+{
+    delete m_mainWindowController;
+}
+
 }
 }

@@ -9,12 +9,18 @@ TcpServerLink::TcpServerLink(QTcpSocket* socket, quint32 linkCount, QObject *par
     m_linkCount(linkCount),
     m_socket(socket),
     m_isWaitReadData(false),
-    m_sizePacketForRead(0)
+    m_sizePacketForRead(0),
+    m_isConnected(true)
 {
     qDebug() << "Connected to client";
     connect(m_socket, &QTcpSocket::readyRead, this, &TcpServerLink::slotReadyRead);
     connect(m_socket, &QTcpSocket::disconnected, this, &TcpServerLink::slotDisconnected);
 
+}
+
+TcpServerLink::~TcpServerLink()
+{
+    close();
 }
 
 bool TcpServerLink::sendData(const QByteArray &data)
@@ -32,6 +38,7 @@ bool TcpServerLink::sendData(const QByteArray &data)
 
 void TcpServerLink::close()
 {
+    m_isConnected = false;
     m_socket->close();
 }
 
@@ -74,8 +81,12 @@ void TcpServerLink::slotReadyRead()
 
 void TcpServerLink::slotDisconnected()
 {
-    QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
-    socket->disconnectFromHost();
+    if(m_isConnected)
+    {
+        QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
+        socket->disconnectFromHost();
+        emit disconnected(m_linkCount);
+    }
 }
 
 }}
